@@ -28,8 +28,13 @@ jobs:
       - name: filter
         id: filter
         run: |
+          echo ${{ toJSON(steps.changes.outputs) }}
           filterd_change_dirs=$(echo '${{ toJSON(steps.changes.outputs) }}' | jq '. | to_entries[] | select(.value == "true") | .key')
           echo "::set-output name=change_dirs::$(echo $filterd_change_dirs | jq -sc '.')"
+
+      - name: echo output
+        run: |
+          echo ${{ steps.filter.outputs.change_dirs }}
 
   echo-build-matrix:
     needs: determin-change-dir
