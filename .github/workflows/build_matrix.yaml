@@ -1,4 +1,4 @@
-name: release for backend-services
+name: poc for build matrix
 
 on:
   push:
@@ -44,7 +44,7 @@ jobs:
 
     strategy:
       matrix:
-        change_dirs: ${{ fromJSON(needs.determine-target-services.outputs.change_dirs) }}
+        change_dirs: ${{ needs.determine-target-services.outputs.change_dirs }}
 
     steps:
       - name: echo change dirs
