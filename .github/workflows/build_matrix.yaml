@@ -32,7 +32,7 @@ jobs:
           echo "::set-output name=change_dirs::$(echo $filterd_change_dirs | jq -sc '.')"
 
   echo-build-matrix:
-    needs: determine-target-services
+    needs: determin-change-dir
     runs-on: ubuntu-latest
 
     if: needs.determin-change-dir.outputs.change_dirs != '[]'
