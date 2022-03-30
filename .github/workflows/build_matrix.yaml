@@ -1,0 +1,48 @@
+name: release for backend-services
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "!*"
+  workflow_dispatch:
+
+jobs:
+  determin-change-dir:
+    runs-on: ubuntu-latest
+
+    outputs:
+      change_dirs: ${{ steps.filter.outputs.change_dirs }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: path filter
+        uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: .github/constants/path-filter.yaml
+          base: main
+
+      - name: filter
+        id: filter
+        run: |
+          filterd_change_dirs=$(echo '${{ toJSON(steps.changes.outputs) }}' | jq '. | to_entries[] | select(.value == "true") | .key')
+          echo "::set-output name=change_dirs::$(echo $filterd_change_dirs | jq -sc '.')"
+
+  echo-build-matrix:
+    needs: determine-target-services
+    runs-on: ubuntu-latest
+
+    if: needs.determin-change-dir.outputs.change_dirs != '[]'
+
+    strategy:
+      matrix:
+        change_dirs: ${{ fromJSON(needs.determine-target-services.outputs.change_dirs) }}
+
+    steps:
+      - name: echo change dirs
+        run: |
+          echo "change dirs"
+          echo ${{ matrix.change_dirs }}

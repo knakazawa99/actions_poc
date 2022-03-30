@@ -1,0 +1,5 @@
+path-filter-poc:
+  - 'poc/path-filter/poc.txt'
+
+path-filter-poc2:
+  - 'poc/path-filter/poc2.txt'
