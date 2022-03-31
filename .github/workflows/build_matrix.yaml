@@ -30,7 +30,7 @@ jobs:
         run: |
           echo ${{ steps.changes.outputs }}
           filterd_change_dirs=$(echo '${{ toJSON(steps.changes.outputs) }}' | jq '. | to_entries[] | select(.value == "true") | .key')
-          echo "::set-output name=change_dirs::$(echo $filterd_change_dirs | jq -sc '.')"
+          echo "::set-output name=change_dirs::$(echo $filterd_change_dirs)"
 
       - name: echo output
         run: |
@@ -44,7 +44,7 @@ jobs:
 
     strategy:
       matrix:
-        change_dirs: "${{ needs.determin-change-dir.outputs.change_dirs }}"
+        change_dirs: ${{ needs.determin-change-dir.outputs.change_dirs }}
 
     steps:
       - name: echo change dirs
