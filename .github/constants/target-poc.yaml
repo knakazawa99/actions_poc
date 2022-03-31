@@ -1,0 +1,7 @@
+path-filter-poc:
+  SECRET_POC: path-filter-poc11
+  SECRET_POC2: path-filter-poc12
+
+path-filter-poc2:
+  SECRET_POC: path-filter-poc21
+  SECRET_POC2: path-filter-poc22

@@ -53,3 +53,22 @@ jobs:
         run: |
           echo "change dirs"
           echo ${{ matrix.change_dirs }}
+
+      - name: set env
+        id: set-env
+        run: |
+          ENV=$(echo "${{ matrix.change_dirs }}" | cut -d '/' -f1)
+          echo "set env"
+          echo $ENV
+          echo "::set-output name=target_poc::$ENV"
+
+      - name: Set environment variables for each env
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq .${{ steps.set-env.outputs.target_poc }} .github/constants/target-poc.yaml -o props | tr -d " " >> $GITHUB_ENV
+
+      - name: echo envs
+        run: |
+          echo "Echo Environment"
+          echo ${{ env.SECRET_POC }}
+          echo ${{ env.SECRET_POC2 }}
