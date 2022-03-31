@@ -63,12 +63,15 @@ jobs:
           echo "::set-output name=target_poc::$ENV"
 
       - name: Set environment variables for each env
+        id: set-poc-value
         uses: mikefarah/yq@master
         with:
-          cmd: yq .${{ steps.set-env.outputs.target_poc }} .github/constants/target-poc.yaml -o props | tr -d " " >> $GITHUB_ENV
+          cmd: yq .${{ steps.set-env.outputs.target_poc }} .github/constants/target-poc.yaml -o props | tr -d " " >> $GITHUB_ENV \
+               echo "::set-output name=SECRET_POC::${{ env.SECRET_POC }}" \
+               echo "::set-output name=SECRET_POC2::${{ env.SECRET_POC2 }}"
 
       - name: echo envs
         run: |
           echo "Echo Environment"
-          echo ${{ env.SECRET_POC }}
-          echo ${{ env.SECRET_POC2 }}
+          echo ${{ steps.set-poc-value.outputs.SECRET_POC }}
+          echo ${{ steps.set-poc-value.outputs.SECRET_POC2 }}
