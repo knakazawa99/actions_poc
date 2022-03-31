@@ -45,7 +45,7 @@ jobs:
 
     strategy:
       matrix:
-        change_dirs: '${{ needs.determin-change-dir.outputs.change_dirs }}'
+        change_dirs: ${{ needs.determin-change-dir.outputs.change_dirs }}
 
     steps:
       - name: echo change dirs
