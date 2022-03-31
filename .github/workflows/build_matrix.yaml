@@ -30,6 +30,7 @@ jobs:
         run: |
           echo ${{ steps.changes.outputs }}
           filterd_change_dirs=$(echo '${{ toJSON(steps.changes.outputs) }}' | jq '. | to_entries[] | select(.value == "true") | .key')
+          echo $filterd_change_dirs
           echo "::set-output name=change_dirs::$(echo $filterd_change_dirs)"
 
       - name: echo output
