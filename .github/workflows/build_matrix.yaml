@@ -28,24 +28,25 @@ jobs:
       - name: filter
         id: filter
         run: |
-          echo ${{ steps.changes.outputs }}
+          echo '${{ toJSON(steps.changes.outputs) }}' | jq '. | to_entries[] | select(.value == "true") | .key'
           filterd_change_dirs=$(echo '${{ toJSON(steps.changes.outputs) }}' | jq '. | to_entries[] | select(.value == "true") | .key')
           echo $filterd_change_dirs
-          echo "::set-output name=change_dirs::$(echo $filterd_change_dirs | jq -sc '.')"
+          echo "::set-output name=change_dirs::$(echo $filterd_change_dirs | jq -sc .)"
 
       - name: echo output
         run: |
+          echo '${{ steps.filter.outputs.change_dirs }}'
           echo ${{ steps.filter.outputs.change_dirs }}
 
   echo-build-matrix:
     needs: determin-change-dir
     runs-on: ubuntu-latest
 
-    if: needs.determin-change-dir.outputs.change_dirs != '[]'
+    if: ${{ needs.determin-change-dir.outputs.change_dirs }} != '[]'
 
     strategy:
       matrix:
-        change_dirs: ${{ needs.determin-change-dir.outputs.change_dirs }}
+        change_dirs: ${{ fromJson(needs.determin-change-dir.outputs.change_dirs) }}
 
     steps:
       - name: echo change dirs
