@@ -65,7 +65,7 @@ jobs:
 
       - name: Set environment variables for each env
         run: |
-          yq "with_entries(select(.key == \"${{ steps.set-env.outputs.target_poc }}\")) | .${{ steps.set-env.outputs.target_poc }}" .github/constants/target-poc.yaml -o props | tr -d " " >> $GITHUB_EN
+          yq "with_entries(select(.key == \"${{ steps.set-env.outputs.target_poc }}\")) | .${{ steps.set-env.outputs.target_poc }}" .github/constants/target-poc.yaml -o props | tr -d " " >> $GITHUB_ENV
 
 #      - name: Set environment variables for each env
 #        id: set-poc-value
