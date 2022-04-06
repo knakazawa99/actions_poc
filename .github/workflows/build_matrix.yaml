@@ -49,6 +49,8 @@ jobs:
         change_dirs: ${{ fromJson(needs.determin-change-dir.outputs.change_dirs) }}
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: echo change dirs
         run: |
           echo "change dirs"
