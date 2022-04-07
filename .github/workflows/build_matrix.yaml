@@ -63,25 +63,27 @@ jobs:
           echo "set env"
           echo $ENV
           echo "::set-output name=target_poc::$ENV"
-          
 
       - name: Set environment variables for each env
         run: |
           yq "with_entries(select(.key == \"${{ steps.set-env.outputs.target_poc }}\")) | .${{ steps.set-env.outputs.target_poc }}" .github/constants/target-poc.yaml -o props | tr -d " " >> $GITHUB_ENV
 
-#      - name: Set environment variables for each env
-#        id: set-poc-value
-#        uses: mikefarah/yq@master
-#        #TODO: これが出る ->  Error: open .github/constants/target-poc.yaml: no such file or directory
-#        with:
-#          cmd: yq .${{ steps.set-env.outputs.target_poc }} .github/constants/target-poc.yaml -o props | tr -d " " >> $GITHUB_ENV \
-#               pwd \
-#               echo "::set-output name=SECRET_POC::${{ env.SECRET_POC }}" \
-#               echo "::set-output name=SECRET_POC2::${{ env.SECRET_POC2 }}"
-
       - name: echo envs
         run: |
           echo "Echo Environment"
           echo ${{ env.SECRET_POC }}
-          echo ${{ steps.set-poc-value.outputs.SECRET_POC }}
-          echo ${{ steps.set-poc-value.outputs.SECRET_POC2 }}
+          echo ${{ env.SECRET_POC2 }}
+
+  split-out-put:
+    needs: determin-change-dir
+    runs-on: ubuntu-latest
+
+    if: ${{ needs.determin-change-dir.outputs.change_dirs }} != '[]'
+
+    steps:
+      - name: echo change dirs
+        run: |
+          echo ${{ needs.determin-change-dir.outputs.change_dirs }}
+          splitedAry=$(echo `echo "${{ needs.determin-change-dir.outputs.change_dirs }}" | tr '[' ' ' | tr ']' ' ' | tr ',' ' '`)
+          echo "npm install $splitedAry"
+        
